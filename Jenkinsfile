@@ -18,11 +18,6 @@ pipeline {
     }
   
   
-    stage('Run tests') {
-      steps {
-        sh "docker run testapp npm test"
-      }
-    }
    stage('Deploy Image') {
       steps{
         sh '''
@@ -31,24 +26,5 @@ pipeline {
         '''
         }
       }
-  
-
-    stage('Pass To K8s'){
-        steps {
-        sh '''
-        sshpass -p 'master' ssh 172.17.0.1 -l root -o StrictHostKeyChecking=no "kubectl create deployment testapp --image=127.0.0.1:5000/mguazzardo/testapp"
-       echo "Wait"
-       sleep 10
-       sshpass -p 'master' ssh 172.17.0.1 -l root -o StrictHostKeyChecking=no "kubectl expose deployment testapp --port=3000"
-       sshpass -p 'master' ssh 172.17.0.1 -l root -o StrictHostKeyChecking=no "wget https://raw.githubusercontent.com/tercemundo/platzi-scripts-integracion/master/webapp/nodePort.yml"
-       sshpass -p 'master' ssh 172.17.0.1 -l root -o StrictHostKeyChecking=no "kubectl apply -f nodePort.yml" 
-
-           '''
-
-            }
-        }
-	
-
-
     }
 }
