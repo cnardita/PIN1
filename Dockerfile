@@ -2,8 +2,8 @@ FROM node:latest
 
 WORKDIR /usr/src/app
 
-ADD package.json package-lock.json /app/
-RUN apt install npm
+COPY package*.json /app/
+RUN npm install
 
 EXPOSE 3000
 
