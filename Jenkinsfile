@@ -1,30 +1,30 @@
 pipeline {
   agent any
 
-  options {
-    timeout(time: 2, unit: 'MINUTES')
-  }
-
   environment {
-    ARTIFACT_ID = "elbuo8/webapp:${env.BUILD_NUMBER}"
+#   ARTIFACT_ID = "elbuo8/webapp:${env.BUILD_NUMBER}"
+    NEXUS
   }
    stages {
-   stage('Building image') {
+    stage('Clonar Proyecto') {
       steps{
-          sh '''
-          docker build -t testapp .
-             '''  
-        }
+        git branch: 'master', url: 'https://github.com/cnardita/PIN1'
+      }
+
     }
-  
-  
-   stage('Deploy Image') {
+    stage('Crear imagen') {
       steps{
         sh '''
-        docker tag testapp 127.0.0.1:5000/mguazzardo/testapp
-        docker push 127.0.0.1:5000/mguazzardo/testapp   
-        '''
-        }
+        docker build -t testapp .
+        '''  
       }
     }
+  
+  
+    stage('Clean Up') {
+      steps{
+        sh 'docker rmi '
+      }
+    }
+  }
 }
