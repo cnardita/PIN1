@@ -3,7 +3,7 @@ FROM node:latest
 WORKDIR /usr/src/app
 
 ADD package.json package-lock.json /app/
-RUN npm install
+RUN apt install npm
 
 EXPOSE 3000
 
